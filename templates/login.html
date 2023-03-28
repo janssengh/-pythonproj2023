@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap.css')}}">
+
+    <title>Login</title>
+</head>
+<body>
+
+  <div class="container">
+
+      {% with lista_mensagens = get_flashed_messages() %}
+            {% if lista_mensagens %}
+                <ul class="list-unstyled">
+                    {% for mensagem in lista_mensagens %}
+                         <li class="alert alert-success">{{mensagem}}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+    <h1>Faça seu login</h1>
+    <form action="{{url_for('autenticar')}}" method="post">
+
+      <label for="usuario">Nome do Usuário:</label>
+      <input type="text" class="form-control" name="usuario" id="usuario" required>
+
+      <label for="senha">Senha:</label>
+      <input type="password" class="form-control" name="senha" id="senha" required>
+
+      <button class="btn btn-primary">Entrar</button>
+
+    </form>
+
+  </div>
+
+</body>
+</html>
