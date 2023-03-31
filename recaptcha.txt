@@ -1,0 +1,17 @@
+google.com/recaptcha/admin/create
+
+
+Etiqueta: recaptchapython2023
+
+Desafio(v2)
+	Caixa de seleção 'não sou um robo'
+
+dominio: localhost
+
+nome projeto: projeto2023
+
+chave do site:(publica)
+6Lc2_0YlAAAAABAiIufL9fiAcQptQIF3LnddKwJo
+
+chave secreta:(pivada)
+6Lc2_0YlAAAAAB5JMKSTh9e843n2NI1YgUZzjAFP
