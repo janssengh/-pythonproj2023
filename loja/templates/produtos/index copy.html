@@ -1,0 +1,110 @@
+{% extends "layouts.html" %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+    <div class="container">
+        <div class="row">
+        {% if marca %}
+            {% for m in marca %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{url_for('static', filename='images/' + m.image_1)}}" alt="{{m.name}}" class="card-img-top" height="300">
+
+                    <div class="card-body">
+                        {% if m.discount > 0 %}
+                        <h5 style="text-shadow: 1px 1px 2px #000; color: #f00; transform: rotate(-2deg); position: absolute; top: 50%; left: 25%; font-weight: 600;">
+                            Desconto {{m.discount}} %
+                        </h5>
+                        {% endif %}
+                        <h4 class="text-center">{{m.name}}</h4>
+                        <p class="text-center">Preço R$ {{m.price}}</p>
+
+                        <div class="card-footer">
+                            <a href="#" class="float-sm-start btn btn-sm btn-success" >Detalhes</a>
+                            <a href="#" class="btn btn-sm btn-warning float-end" >Adic.Carrinho</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        {% elif get_cat_prod %}
+            {% for get_cat in get_cat_prod %}
+            <div class="col-md-3">
+                 <div class="card">
+                    <img src="{{url_for('static', filename='images/' + get_cat.image_1)}}" alt="{{get_cat.name}}" class="card-img-top" height="300">
+
+                    <div class="card-body">
+                        {% if get_cat.discount > 0 %}
+                        <h5 style="text-shadow: 1px 1px 2px #000; color: #f00; transform: rotate(-2deg); position: absolute; top: 50%; left: 25%; font-weight: 600;">
+                            Desconto {{get_cat.discount}} %
+                        </h5>
+                        {% endif %}
+                         <h4 class="text-center">{{get_cat.name}}</h4>
+                         <p class="text-center">Preço R$ {{get_cat.price}}</p>
+
+                        <div class="card-footer">
+                             <a href="#" class="float-sm-start btn btn-sm btn-success" >Detalhes</a>
+                             <a href="#" class="btn btn-sm btn-warning float-end" >Adic.Carrinho</a>
+                        </div>
+                    </div>
+                 </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            {% for produto in produtos.items %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{url_for('static', filename='images/' + produto.image_1)}}" alt="{{produto.name}}" class="card-img-top" height="300">
+
+                    <div class="card-body">
+                        {% if produto.discount > 0 %}
+                        <h5 style="text-shadow: 1px 1px 2px #000; color: #f00; transform: rotate(-2deg); position: absolute; top: 50%; left: 25%; font-weight: 600;">
+                            Desconto {{produto.discount}} %
+                        </h5>
+                        {% endif %}
+                        <h4 class="text-center">{{produto.name}}</h4>
+                        <p class="text-center">Preço R$ {{produto.price}}</p>
+
+                        <div class="card-footer">
+                            <a href="#" class="float-sm-start btn btn-sm btn-success" >Produto</a>
+                            <a href="#" class="btn btn-sm btn-warning float-end" >Adic.Carrinho</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- PAGINAÇÃO -->
+        <div class="row">
+            <div class="col text-center">
+            {% if produtos.has_prev %}
+            <a href="{{url_for('home', pagina=produtos.prev_num)}}" class="btn btn-outline-success btn-sm mt-3">Anterior</a>
+            {% endif %}
+
+            {% if produtos.total > 4 %}
+            {% for page_num in produtos.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+            {% if page_num %}
+
+            {% if produtos.pagina == page_num %}
+            <a href="{{url_for('home', pagina=page_num)}}" class="btn btn-success btn-sm mt-3">{{page_num}}</a>
+            {% else %}
+            <a href="{{url_for('home', pagina=page_num)}}" class="btn btn-outline-success btn-sm mt-3">{{page_num}}</a>
+            {% endif %}
+            {% else %}
+            ...
+            {% endif %}
+
+            {% endfor %}
+            {% endif %}
+            {% if produtos.has_next %}
+            <a href="{{url_for('home', pagina=produtos.next_num)}}" class="btn btn-outline-success btn-sm mt-3">Próxima</a>
+            {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}

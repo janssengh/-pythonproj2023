@@ -1,0 +1,105 @@
+ __init__.py
+Você pode (a partir do seu ambiente virtual ativo) fazer o seguinte:
+pip freeze > requirements.txt
+
+que cuidará automaticamente de todas as bibliotecas/módulos disponíveis em seu projeto.
+O próximo desenvolvedor só teria que emitir:
+pip install -r requirements.txt
+
+INSTALAÇÕES:
+pip install Flask-SQLAlchemy
+pip install mysqlclient
+pip install flask_bcrypt
+pip install flask_uploads
+pip install flask_login
+pip install flask-wtf
+pip install email_validator
+pip install wtforms[email]
+pip install uploads
+pip install -U werkzeug==0.16.0
+pip install flask==2.1.3
+pip install flask_migrate
+pip uninstall flask_migrate
+pip install pdfkit
+pip install stripe
+
+Emflask_uploads.py
+Mudar
+from werkzeug import secure_filename,FileStorage
+para
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
+
+Paginação:
+Mudar limite no rotas do produto home:
+    produtos = Product.query.filter(Product.stock > 0).order_by(Product.id.desc()).paginate(page=pagina, per_page=4)
+Mudar paginação também no index do produto, em cada loop marca, categoria e produto:
+    ex.produto {% if produtos.pagina == page_num %}
+
+DESENVOLVIMENTO
+1º Criar os diretórios
+2º Criar arquivos:
+    run.py (na raiz)
+    __init__.py (na loja)
+    rotas.py (na loja)
+3º Codificar o construtor __init__.py
+# para uso do MYSQL
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
+
+from flask_bcrypt import Bcrypt
+#from flask_uploads import IMAGES, UploadSet, configure_uploads, patch_request_class
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+uri = 'sqlite:///' + os.path.join(basedir, 'minhaloja.db')
+
+app = Flask(__name__)
+
+#criar base de dados sqlite
+app.config["SQLALCHEMY_DATABASE_URI"] = uri
+app.config['SECRET_KEY'] = 'rejoinders1963'
+
+#usando o prompt do mysql command line, vamos criar uma base de dados
+#create database bancodados
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:roeland@localhost:3306/janssenmkt'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6Lc2_0YlAAAAAB5JMKSTh9e843n2NI1YgUZzjAFP'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6Lc2_0YlAAAAABAiIufL9fiAcQptQIF3LnddKwJo'
+app.config['RECAPTCHA_USE_SSL'] = False
+app.config['RECAPTCHA_OPTIONS'] = {'theme': 'white'}
+
+db = SQLAlchemy(app)
+
+lista = []
+
+bcrypt = Bcrypt(app)
+
+
+
+app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'loja/static/images')
+
+4º Codificar rotas.py
+from flask import render_template, session, request, redirect, url_for
+from loja import app, db
+
+@app.route('/')
+def admin():
+    return(f'Seja bem vindo ao sistema em flask !')
+
+5º Incluir a chamada da rota no construtor __init__.py
+from loja.admin import rotas
+
+6º Codificar run.py
+from loja import app
+if __name__ == '__main__':
+    app.run(debug=True)
+
+7º Criar layouts.html
+8º Incluir a rota registrar no rotas.py
+9º Criar registrar.html
+10º No addproduto.html, define-se qtde de linhas desejadas para a descrição produto
+
+
+

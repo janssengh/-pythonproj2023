@@ -1,0 +1,101 @@
+{% extends 'layouts.html' %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container mt-4">
+    {% include '_messages.html' %}
+    <div class="row">
+        <div class="col-md-12">
+            Número do Pedido: {{pedidos.invoice}}
+            <br>
+            Situação do Pedido: {{pedidos.status}}
+            <br>
+            Nome do Cliente: {{cliente.name}}
+            <br>
+            E-mail do Cliente: {{cliente.email}}
+            <br>
+            Telefone do Cliente: {{cliente.contact}}
+            <br>
+            <br>
+            <table class="table table-sm">
+                <thead>
+
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Cor</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Desconto</th>
+                    <th>SubTotal</th>
+
+
+                </thead>
+
+                <tbody>
+                    {% for key , produto in pedidos.order.items() %}
+                    {% set discount = "%0.2f" | format((produto.discount/100) * produto.price|float) %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{produto.name}}</td>
+
+                        <form action="{{url_for('updateCarro', code=key)}}" method="post">
+
+                           <td>
+                                {{produto.color|capitalize}}
+                           </td>
+                            <td>R$ {{produto.price}}</td>
+                            <td>{{produto.quantity}}</td>
+                            {% if produto.discount > 0 %}
+                            <td>{{produto.discount}} % &nbsp; = {{discount}}</td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                            {% set subtotal = produto.price|float * produto.quantity|int %}
+                            <td>{{"%0.2f"|format((subTotal|float) - discount|float)}}</td>
+
+                            </form>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="table table-sm">
+                <tr>
+                   <td></td>
+                   <td>
+                       {% if pedidos.status=='Pago' %}
+                       {% else %}
+                       <form action="{{url_for('pagamento')}}" method="POST">
+                           {% set amount = (gTotal | string()).replace('.','') %}
+                           <input type="hidden" name="amount" value="{{amount}}">
+                           <input type="hidden" name="invoice" value="{{pedidos.invoice}}">
+                           <script
+                                src="https://checkout.stripe.com/checkout.js"
+                                class="stripe-button"
+                                data-key="pk_test_51MuGtwGhyM6JqwPtVWXLJqVrAcyJfZXHUHMBX46BU895l6ypXlJ0aKk8LDuPw3TzYIYmO6901OPQc2XDcIhiYcbq00VbWXO4tP"
+                                data-name="Loja_Flask"
+                                data-description="Pagamento Seguro"
+                                data-amount="{{amount}}"
+                                data-currency="brl">
+                           </script>
+                        </form>
+                        {% endif %}
+                   </td>
+                   <td colspan="3">Imposto:&nbsp; R$ {{imposto}}</td>
+                   <td colspan="5">Valor Pagar:&nbsp; R$ {{gTotal}}</td>
+
+                   <td>
+                       <form action="{{url_for('get_pdf', invoice=pedidos.invoice)}}" method="post">
+                            <button type="submit" class="btn btn-sm btn-warning float-end">Gerar PDF</button>
+                       </form>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
